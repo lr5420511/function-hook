@@ -1,5 +1,4 @@
-# function-hook
-javascript函数钩子( javascript function hook ).
+javascript函数钩子( javascript function hook ).<h1/><br/>
 
    通过调用HookMainifest.InstallHook和HookMainifest.UnInstallHook两个函数，可以对钩子进行管理。
 InstallHook函数可以对所有的原型方法和实例方法挂钩。当对系统预置方法挂钩时，将会影响系统内所有的函数调用，利用这个特点可以用来改造原生javascript方法或者第三方库内的方法。
