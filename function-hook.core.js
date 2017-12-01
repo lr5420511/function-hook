@@ -12,36 +12,7 @@
     win.HookMainifest.prototype.construtor = win.HookMainifest;
 
     win.HookMainifest.OverrideMethods = [];
-    win.HookMainifest.MethodIsExist = function(host, method) {
-        var isExist = false;
-        for (var index = 0; index < win.HookMainifest.OverrideMethods.length; index++) {
-            var currentMethodEntry = win.HookMainifest.OverrideMethods[index];
-            if (host === currentMethodEntry.Host && method === currentMethodEntry.Method) {
-                isExist = true;
-                break;
-            } else {
-                continue;
-            }
-        }
-        return isExist;
-    };
-    win.HookMainifest.GetMethodInstance = function(host, method) {
-        var methodInstance;
-        for (var index = 0; index < win.HookMainifest.OverrideMethods.length; index++) {
-            var currentMethodEntry = win.HookMainifest.OverrideMethods[index];
-            if (host === currentMethodEntry.Host && method === currentMethodEntry.Method) {
-                methodInstance = currentMethodEntry.MethodInstance;
-                break;
-            } else {
-                continue;
-            }
-        }
-        return methodInstance;
-    };
-    win.HookMainifest.InsertMethodEntry = function(host, method, methodInstance) {
-        win.HookMainifest.OverrideMethods.push(new win.HookMainifest(host, method, methodInstance));
-    };
-    win.HookMainifest.RemoveMethodEntry = function(host, method) {
+    win.HookMainifest.GetIndexOfMethodEntry = function(host, method) {
         var eIndex;
         for (var index = 0; index < win.HookMainifest.OverrideMethods.length; index++) {
             var currentMethodEntry = win.HookMainifest.OverrideMethods[index];
@@ -52,6 +23,21 @@
                 continue;
             }
         }
+        return eIndex;
+    };
+    win.HookMainifest.MethodIsExist = function(host, method) {
+        return typeof win.HookMainifest.GetIndexOfMethodEntry(host, method) !== "undefined";
+    };
+    win.HookMainifest.GetMethodInstance = function(host, method) {
+        var eIndex = win.HookMainifest.GetIndexOfMethodEntry(host, method);
+        return typeof eIndex === "undefined" ?
+            undefined : win.HookMainifest.OverrideMethods[eIndex].MethodInstance;
+    };
+    win.HookMainifest.InsertMethodEntry = function(host, method, methodInstance) {
+        win.HookMainifest.OverrideMethods.push(new win.HookMainifest(host, method, methodInstance));
+    };
+    win.HookMainifest.RemoveMethodEntry = function(host, method) {
+        var eIndex = win.HookMainifest.GetIndexOfMethodEntry(host, method);
         if (typeof eIndex === "undefined") {
             throw new Error("window.HookMainifest.RemoveMethodEntry: The instance of HookMainifest can't remove!");
         }
